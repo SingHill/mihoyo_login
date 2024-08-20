@@ -113,7 +113,7 @@ def get_qr_url() -> Tuple[str, str, str, str]:
     说明:
         获取二维码URL
     """
-    app_id = "4"
+    app_id = "1"
     device = "".join(random.choices((ascii_letters + digits), k=64))
     _json = {
         "app_id": app_id,
@@ -196,15 +196,16 @@ def get_stoken_by_game_token(uid: str, game_token: str):
     )
     result: StokenResult = response.json()
     data = result["data"]
-    return data["token"]["token"]
+    mid = data["user_info"]["mid"]
+    return mid, data["token"]["token"]
 
 
 def main():
     qr_url, app_id, ticket, device = get_qr_url()
     show_qrcode(qr_url)
     uid, game_token = check_login(app_id, ticket, device)
-    stoken = get_stoken_by_game_token(uid, game_token)
-    print(f"{uid=}, {game_token=}, {stoken=}")
+    mid, stoken = get_stoken_by_game_token(uid, game_token)
+    print(f"{uid=}, {mid=} ,{game_token=}, {stoken=}")
 
 
 if __name__ == "__main__":
