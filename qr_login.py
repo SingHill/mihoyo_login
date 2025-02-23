@@ -11,6 +11,7 @@ import logging
 import uuid
 import hashlib
 from copy import deepcopy
+from PIL import Image
 
 APP_VERSION = "2.71.1"
 DEVICE_NAME = "Xiaomi MI 6"
@@ -113,7 +114,7 @@ def get_qr_url() -> Tuple[str, str, str, str]:
     说明:
         获取二维码URL
     """
-    app_id = "1"
+    app_id = "2"
     device = "".join(random.choices((ascii_letters + digits), k=64))
     _json = {
         "app_id": app_id,
@@ -172,6 +173,8 @@ def show_qrcode(qr_url: str):
     qr.add_data(qr_url)
     image = qr.make_image()
     image.save("code.png")
+    img=Image.open("code.png")
+    img.show()                    # 直接打开二维码图片,方便扫码
     f = StringIO()
     qr.print_ascii(out=f)
     f.seek(0)
@@ -195,6 +198,7 @@ def get_stoken_by_game_token(uid: str, game_token: str):
         json=_json,
     )
     result: StokenResult = response.json()
+    print(f"获取完整信息: \n{result}\n\n")                # 输出完整的结果
     data = result["data"]
     mid = data["user_info"]["mid"]
     return mid, data["token"]["token"]
